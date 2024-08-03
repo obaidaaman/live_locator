@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:live_locator/features/last_location/last_location.dart';
-import 'package:live_locator/features/map/view/location_bloc_service.dart';
+import 'package:live_locator/features/map/view/map_location_page.dart';
 import 'package:live_locator/features/onboarding/controller/onboarding_controller.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -27,7 +27,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: const Text("Location"),
+        title: const Text("Live Tracker"),
         actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.person))],
       ),
       body: Padding(
