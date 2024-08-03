@@ -20,8 +20,11 @@ This project is a starting point of a Flutter Application.
 ## Working of the application
 
 The application opens and shows the current stats of a worker.
-The worker can click check In and it will show  update the current location of the worker in regular intervals.
+
+The worker can click check In and it will update the current location of the worker on the Google map in regular intervals.
+
 When the worker checks out, Last Location and Check out time are stored in Firebase Firestore Database.
+
 Worker can also check its last known location on the map.
 
 
