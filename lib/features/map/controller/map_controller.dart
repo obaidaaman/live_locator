@@ -1,16 +1,20 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
+
+import '../../onboarding/screen/onboarding_screen.dart';
 
 class MapController extends GetxController {
   final Location _locationController = Location();
   Rx<LatLng> location = Rx<LatLng>(const LatLng(0.0, 0.0));
   StreamSubscription<LocationData>? _locationSubscription;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  RxBool isCheckout = false.obs;
   @override
   void onInit() {
     // TODO: implement onInit

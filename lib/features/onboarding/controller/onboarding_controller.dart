@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 import 'package:intl/intl.dart';
 
 class OnboardingController extends GetxController {
   Rx<String> lastCheckout = ''.obs;
   Rx<String> latitude = ''.obs;
   Rx<String> longitude = ''.obs;
-
+  RxBool isCheckIn = false.obs;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override

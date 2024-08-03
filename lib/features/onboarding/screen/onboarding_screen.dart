@@ -13,11 +13,10 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  OnboardingController _controller = Get.put(OnboardingController());
+  final OnboardingController _controller = Get.put(OnboardingController());
 
   @override
   void initState() {
-    // TODO: implement initState
     _controller.fetchLastCheckout();
     super.initState();
   }
@@ -140,17 +139,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const SizedBox(
               height: 10,
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => LocationStream()));
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-              child: const Text(
-                "Check In Now",
-                style: TextStyle(color: Colors.white),
-              ),
-            )
+            Obx(() {
+              if (_controller.isCheckIn.value) {
+                return const CircularProgressIndicator(
+                  color: Colors.blue,
+                );
+              } else {
+                return ElevatedButton(
+                  onPressed: () {
+                    _controller.isCheckIn.value = !_controller.isCheckIn.value;
+                    Future.delayed(const Duration(seconds: 2), () {
+                      Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LocationStream()))
+                          .then((context) {
+                        _controller.isCheckIn.value =
+                            !_controller.isCheckIn.value;
+                      });
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                  child: const Text(
+                    "Check In Now",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
+              }
+            })
           ],
         ),
       ),
