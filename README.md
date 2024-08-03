@@ -7,13 +7,21 @@ https://github.com/user-attachments/assets/6171f57d-daf6-465a-a129-f000e272c1bf
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is a starting point of a Flutter Application.
 
-A few resources to get you started if this is your first Flutter project:
+## Steps to Setup App
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. Clone the Repository.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+2. Get all the packages. Run flutter pub get
+
+3. Run command flutter run
+
+## Working of the application
+
+The application opens and shows the current stats of a worker.
+The worker can click check In and it will show  update the current location of the worker in regular intervals.
+When the worker checks out, Last Location and Check out time are stored in Firebase Firestore Database.
+Worker can also check its last known location on the map.
+
+
