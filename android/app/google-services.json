@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "170629900104",
+    "project_id": "mapping-40e9c",
+    "storage_bucket": "mapping-40e9c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:170629900104:android:a19cc73ccbc82c6dabf57d",
+        "android_client_info": {
+          "package_name": "com.example.live_locator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1zFZZU1mK8JtR1P7pZkSJ2sSu-ZM4YWQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
