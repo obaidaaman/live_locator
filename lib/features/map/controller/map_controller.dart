@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -14,9 +15,9 @@ class MapController extends GetxController {
   RxBool isCheckout = false.obs;
   RxString checkIntime = ''.obs;
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    _getCurrentLocation();
+    await _getCurrentLocation();
   }
 
   Future<void> _getCurrentLocation() async {
@@ -60,9 +61,15 @@ class MapController extends GetxController {
         location.value.latitude.toString(),
         location.value.longitude.toString());
 
-    final mapping = data.toMap();
+    final map = data.toMap();
+    final checkOut = {
+      'latitude': location.value.latitude.toString(),
+      'longitude': location.value.longitude.toString(),
+      'time': formattedTime,
+      'checkInTime': checkIntime.value
+    };
     try {
-      await firestore.collection('check outs').add(mapping);
+      await firestore.collection('check outs').add(map);
       print('Check-Out saved successfully');
     } catch (e) {
       print('Error saving check-out : $e');
@@ -70,8 +77,11 @@ class MapController extends GetxController {
   }
 
   @override
-  void onClose() {
+  void onClose() async {
     // TODO: implement onClose
+    await saveLocationandTime();
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     location.close();
     _locationSubscription!.cancel();
     super.onClose();

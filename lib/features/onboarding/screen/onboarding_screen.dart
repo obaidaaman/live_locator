@@ -129,7 +129,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         Obx(() {
                           if (_controller.latitude.value == '' ||
                               _controller.longitude.value == '') {
-                            return SizedBox();
+                            return const SizedBox();
                           } else {
                             return Center(
                               child: ElevatedButton(
@@ -180,8 +180,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => LocationStream(
-                                    lastCheckIn: _controller.lastCheckIn.value,
-                                  ))).then((context) {
+                                  lastCheckIn: _controller
+                                      .lastCheckIn.value))).then((context) {
                         _controller.isCheckIn.value =
                             !_controller.isCheckIn.value;
                       });

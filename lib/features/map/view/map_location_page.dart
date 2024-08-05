@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:live_locator/features/map/controller/map_controller.dart';
@@ -21,6 +22,7 @@ class _LocationStreamState extends State<LocationStream> {
   void initState() {
     super.initState();
     print('Build');
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     _mapController.location.listen((location) {
       if (_googleMapController != null) {
         _googleMapController!.animateCamera(CameraUpdate.newLatLng(location));
@@ -55,10 +57,9 @@ class _LocationStreamState extends State<LocationStream> {
                     _mapController.checkIntime.value = widget.lastCheckIn;
                     _mapController.isCheckout.value =
                         !_mapController.isCheckout.value;
-                    await _mapController.saveLocationandTime();
                     Future.delayed(const Duration(seconds: 2), () {
                       _googleMapController!.dispose();
-                      _mapController.dispose();
+                      Get.delete<MapController>();
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -75,8 +76,8 @@ class _LocationStreamState extends State<LocationStream> {
         ],
       ),
       body: Obx(() {
-        if (_mapController.location.value.latitude == 0.0 &&
-            _mapController.location.value.longitude == 0.0) {
+        if ((_mapController.location.value.latitude == 0.0 &&
+            _mapController.location.value.longitude == 0.0)) {
           return const Center(
             child: CircularProgressIndicator(
               color: Colors.blue,
@@ -113,10 +114,7 @@ class _LocationStreamState extends State<LocationStream> {
 
   @override
   void dispose() {
-    _mapController.onClose();
-    _googleMapController!.dispose();
-    _mapController.location.close();
-
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
   }
 }
