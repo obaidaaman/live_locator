@@ -5,7 +5,8 @@ import 'package:live_locator/features/map/controller/map_controller.dart';
 import 'package:live_locator/features/onboarding/screen/onboarding_screen.dart';
 
 class LocationStream extends StatefulWidget {
-  const LocationStream({super.key});
+  final String lastCheckIn;
+  LocationStream({super.key, required this.lastCheckIn});
 
   @override
   State<LocationStream> createState() => _LocationStreamState();
@@ -51,6 +52,7 @@ class _LocationStreamState extends State<LocationStream> {
             } else {
               return IconButton(
                   onPressed: () async {
+                    _mapController.checkIntime.value = widget.lastCheckIn;
                     _mapController.isCheckout.value =
                         !_mapController.isCheckout.value;
                     await _mapController.saveLocationandTime();
@@ -58,10 +60,10 @@ class _LocationStreamState extends State<LocationStream> {
                       _googleMapController!.dispose();
                       _mapController.dispose();
                       Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => OnboardingScreen()))
-                          .then((context) {
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const OnboardingScreen())).then((context) {
                         _mapController.isCheckout.value =
                             !_mapController.isCheckout.value;
                       });

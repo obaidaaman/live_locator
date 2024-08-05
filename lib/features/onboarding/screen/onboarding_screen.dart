@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:live_locator/features/last_location/last_location.dart';
 import 'package:live_locator/features/map/view/map_location_page.dart';
 import 'package:live_locator/features/onboarding/controller/onboarding_controller.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  OnboardingScreen({super.key});
+  const OnboardingScreen({super.key});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -52,7 +51,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
                 "Your Stats:",
-                style: TextStyle(fontSize: 20, color: Colors.blue),
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(
@@ -94,6 +96,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                         Row(
                           children: [
+                            const Text("Last Check In at :"),
+                            const SizedBox(
+                              width: 3,
+                            ),
+                            Obx(() => Text(
+                                  _controller.lastCheckIn.value,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ))
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
                             const Text("Last Check Out at :"),
                             const SizedBox(
                               width: 3,
@@ -108,28 +126,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        Center(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              double latitude =
-                                  double.parse(_controller.latitude.value);
-                              double longitude =
-                                  double.parse(_controller.longitude.value);
-                              Get.to(() => LastLocation(
-                                    latitude: latitude,
-                                    longitude: longitude,
-                                  ));
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue.withOpacity(0.5)),
-                            child: const Text(
-                              'View on Map',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        )
+                        Obx(() {
+                          if (_controller.latitude.value == '' ||
+                              _controller.longitude.value == '') {
+                            return SizedBox();
+                          } else {
+                            return Center(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  double latitude =
+                                      double.parse(_controller.latitude.value);
+                                  double longitude =
+                                      double.parse(_controller.longitude.value);
+                                  Get.to(() => LastLocation(
+                                        latitude: latitude,
+                                        longitude: longitude,
+                                      ));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Colors.blue.withOpacity(0.5)),
+                                child: const Text(
+                                  'View on Map',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                            );
+                          }
+                        })
                       ],
                     ),
                   ),
@@ -147,13 +173,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               } else {
                 return ElevatedButton(
                   onPressed: () {
+                    _controller.formatTime();
                     _controller.isCheckIn.value = !_controller.isCheckIn.value;
                     Future.delayed(const Duration(seconds: 2), () {
                       Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const LocationStream()))
-                          .then((context) {
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LocationStream(
+                                    lastCheckIn: _controller.lastCheckIn.value,
+                                  ))).then((context) {
                         _controller.isCheckIn.value =
                             !_controller.isCheckIn.value;
                       });

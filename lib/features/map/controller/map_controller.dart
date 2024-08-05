@@ -1,13 +1,10 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:live_locator/features/onboarding/model/data_model.dart';
 import 'package:location/location.dart';
-
-import '../../onboarding/screen/onboarding_screen.dart';
 
 class MapController extends GetxController {
   final Location _locationController = Location();
@@ -15,9 +12,9 @@ class MapController extends GetxController {
   StreamSubscription<LocationData>? _locationSubscription;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   RxBool isCheckout = false.obs;
+  RxString checkIntime = ''.obs;
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     _getCurrentLocation();
   }
@@ -57,13 +54,15 @@ class MapController extends GetxController {
     DateTime dateTime = DateTime.now();
     String formattedTime = DateFormat.jm().format(dateTime);
 
-    final checkOut = {
-      'latitude': location.value.latitude.toString(),
-      'longitude': location.value.longitude.toString(),
-      'time': formattedTime
-    };
+    final data = DataModel(
+        checkIntime.value,
+        formattedTime,
+        location.value.latitude.toString(),
+        location.value.longitude.toString());
+
+    final mapping = data.toMap();
     try {
-      await firestore.collection('check outs').add(checkOut);
+      await firestore.collection('check outs').add(mapping);
       print('Check-Out saved successfully');
     } catch (e) {
       print('Error saving check-out : $e');

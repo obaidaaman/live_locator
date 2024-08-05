@@ -1,18 +1,20 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:intl/intl.dart';
+import 'package:live_locator/features/onboarding/model/data_model.dart';
 
 class OnboardingController extends GetxController {
   Rx<String> lastCheckout = ''.obs;
   Rx<String> latitude = ''.obs;
   Rx<String> longitude = ''.obs;
   RxBool isCheckIn = false.obs;
+  RxString lastCheckIn = ''.obs;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     fetchLastCheckout();
   }
@@ -27,13 +29,24 @@ class OnboardingController extends GetxController {
 
       if (snapshot.docs.isNotEmpty) {
         var data = snapshot.docs.first.data();
-        var time = data['time'];
-        latitude.value = data['latitude'] ?? '0';
-        longitude.value = data['longitude'] ?? '0';
 
-        lastCheckout.value = time;
+        DataModel model = DataModel.fromMap(data);
+
+        // var time = data['time'];
+        // var checkIntime = data['checkInTime'];
+        // latitude.value = data['latitude'] ?? '0';
+        // longitude.value = data['longitude'] ?? '0';
+
+        lastCheckout.value = model.checkOutTime;
+
+        lastCheckIn.value = model.checkInTime;
+
+        latitude.value = model.latitude;
+
+        longitude.value = model.longitude;
       } else {
         lastCheckout.value = 'No checkout recorded';
+        lastCheckIn.value = 'No checkin recorded';
       }
     } catch (e) {
       print('Error fetching last check-in time: $e');
@@ -41,13 +54,10 @@ class OnboardingController extends GetxController {
     }
   }
 
-  String _formatTime(Timestamp timestamp) {
-    if (timestamp == null) return 'No time available';
+  void formatTime() {
+    DateTime dateTime = DateTime.now();
+    String formattedTime = DateFormat.jm().format(dateTime);
 
-    var time = timestamp.toDate();
-    var formattedTime =
-        DateFormat.jm().format(time); // 'jm' gives format like '5:08 PM'
-
-    return formattedTime;
+    lastCheckIn.value = formattedTime;
   }
 }
